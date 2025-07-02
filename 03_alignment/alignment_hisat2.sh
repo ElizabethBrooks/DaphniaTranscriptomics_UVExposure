@@ -32,7 +32,7 @@ trimmedFolder=$outputsPath"/trimmed"
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$(echo $trimmedFolder | sed "s/trimmed/aligned/g")
+outputFolder=$outputsPath"/aligned"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
