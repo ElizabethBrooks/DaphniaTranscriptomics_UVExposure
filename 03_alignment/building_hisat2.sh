@@ -7,7 +7,7 @@
 
 #Script to generate a hisat2 genome refernce build folder
 #Usage: qsub building_hisat2.sh
-## job 1823654
+## job 1823657
 
 #Required modules for ND CRC servers
 module load bio/2.0

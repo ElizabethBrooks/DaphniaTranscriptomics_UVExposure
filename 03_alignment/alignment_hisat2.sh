@@ -9,6 +9,7 @@
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
 # usage: qsub alignment_hisat2.sh
+## job 1823659
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -54,7 +55,7 @@ buildFileNoEx=$(echo $buildFileNoPath | sed 's/\.fasta//' | sed 's/\.fna//' | se
 
 #Loop through all forward and reverse paired reads and run Hisat2 on each pair
 # using 8 threads and samtools to convert output sam files to bam
-for f1 in "$inputsPath"/"$trimmedFolder"/*pForward.fq.gz; do
+for f1 in $trimmedFolder"/"*pForward.fq.gz; do
 	#Trim extension from current file name
 	curSample=$(echo $f1 | sed 's/.pForward\.fq\.gz//')
 	#Trim file path from current file name
