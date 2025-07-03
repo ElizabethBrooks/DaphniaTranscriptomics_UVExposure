@@ -1,5 +1,5 @@
 species: D_melanica
-pairedReads: /afs/crc/group/pfrenderlab/curie/annotations_short_read_data/Pfrender_MP-3535_250512_CMG
+pairedReads: /afs/crc/group/pfrenderlab/curie/D_melanica_RNA_UV/Pfrender_MP-3533_250512_CMG
 adapter: /afs/crc.nd.edu/x86_64_linux/bio/Trimmomatic/0.32/adapters/TruSeq3-PE.fa:2:30:10
 genomeReference: /afs/crc.nd.edu/group/pfrenderlab/mendel/DaphniaGenomes/1_all_chromosome_assemblies_and_annotation_June2024/D.melanica_CON6_annotation/D.melanica_1.0.masked.fasta
 genomeFeatures_BRAKER: /afs/crc.nd.edu/group/pfrenderlab/mendel/DaphniaGenomes/1_all_chromosome_assemblies_and_annotation_June2024/D.melanica_CON6_annotation/D.melanica_1.0.masked.gtf

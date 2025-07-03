@@ -7,7 +7,9 @@
 # Script to perform fastqc quality control of paired end reads
 # Usage: qsub fastqc_shortReads.sh inputsType
 # Usage Ex: qsub fastqc_shortReads.sh raw
+## job 
 # Usage Ex: qsub fastqc_shortReads.sh trimmed
+## job 
 
 # Required modules for ND CRC servers
 module load bio
