@@ -5,16 +5,15 @@
 #$ -N fastqc_MultiGenome_jobOutput
 
 # Script to perform fastqc quality control of paired end reads
-# Usage: qsub fastqc_shortReads.sh inputsFile
-# Usage Ex: qsub fastqc_shortReads.sh CON6 raw
-# Usage Ex: qsub fastqc_shortReads.sh CON6 trimmed
+# Usage: qsub fastqc_shortReads.sh inputsType
+# Usage Ex: qsub fastqc_shortReads.sh raw
+# Usage Ex: qsub fastqc_shortReads.sh trimmed
 
 # Required modules for ND CRC servers
 module load bio
 
 # retrieve input arguments
-inputGenotype=$1
-inputsType=$2
+inputsType=$1
 
 # Retrieve paired reads absolute path for alignment
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
@@ -31,10 +30,10 @@ if [[ $inputsType == "trimmed" ]]; then
 	# set the directory for inputs
 	readPath=$outputsPath"/trimmed"
 	# set the directory for analysis
-	qcOut=$outputsPath"/qc_trimmed_"$inputGenotype
+	qcOut=$outputsPath"/qc_trimmed"
 elif [[ $inputsType == "raw" ]]; then
 	# set the directory for analysis
-	qcOut=$outputsPath"/qc_raw_"$inputGenotype
+	qcOut=$outputsPath"/qc_raw"
 fi
 
 # Make a new directory for analysis
@@ -54,7 +53,7 @@ versionFile=$qcOut"/software_version_summary.txt"
 fastqc -version > $versionFile
 
 # perform QC
-fastqc $readPath"/"$inputGenotype*\.f*q.gz -o $qcOut
+fastqc $readPath"/"*\.f*q.gz -o $qcOut
 
 # run multiqc
 multiqc $qcOut -o $qcOut -n "multiqc_raw"

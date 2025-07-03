@@ -11,9 +11,6 @@
 # Required modules for ND CRC servers
 module load bio/2.0
 
-# Retrieve input argument of a inputs file
-inputsFile=$1
-
 # Retrieve paired reads absolute path for alignment
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 # Retrieve adapter absolute path for alignment
