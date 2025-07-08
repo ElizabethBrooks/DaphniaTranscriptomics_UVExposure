@@ -4,10 +4,11 @@
 #$ -r n
 #$ -N trimmomatic_MultiGenome_jobOutput
 #$ -pe smp 8
+#$ -q largemem
 
 # Script to perform trimmomatic trimming of paired end reads
 # Usage: qsub trimmomatic_shortReads.sh
-## job
+## job 
 
 # Required modules for ND CRC servers
 module load bio/2.0

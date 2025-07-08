@@ -7,9 +7,9 @@
 # Script to perform fastqc quality control of paired end reads
 # Usage: qsub fastqc_shortReads.sh inputsType
 # Usage Ex: qsub fastqc_shortReads.sh raw
-## job 
+## job 1834152
 # Usage Ex: qsub fastqc_shortReads.sh trimmed
-## job 
+## job 1839317
 
 # Required modules for ND CRC servers
 module load bio
@@ -58,7 +58,7 @@ fastqc -version > $versionFile
 fastqc $readPath"/"*\.f*q.gz -o $qcOut
 
 # run multiqc
-multiqc $qcOut -o $qcOut -n "multiqc_raw"
+multiqc $qcOut -o $qcOut -n "multiqc"
 
 # Print status message
 echo "Analysis complete!"
