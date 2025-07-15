@@ -9,7 +9,8 @@
 # Usage Ex: qsub fastqc_shortReads.sh raw
 ## job 1834152
 # Usage Ex: qsub fastqc_shortReads.sh trimmed
-## job 1839317
+## job 1845218
+## job 1886206
 
 # Required modules for ND CRC servers
 module load bio

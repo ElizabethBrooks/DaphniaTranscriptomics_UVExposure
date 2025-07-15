@@ -8,7 +8,7 @@
 
 # Script to perform trimmomatic trimming of paired end reads
 # Usage: qsub trimmomatic_shortReads.sh
-## job 
+## job 1843091
 
 # Required modules for ND CRC servers
 module load bio/2.0
