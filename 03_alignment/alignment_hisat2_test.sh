@@ -9,7 +9,7 @@
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
 # usage: qsub alignment_hisat2_test.sh
-## job 
+## job 1928435
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -21,13 +21,15 @@ buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.t
 outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+# Retrieve analysis inputs absolute path
+inputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # set inputs absolute path
-trimmedFolder=$outputsPath"/trimmed"
+trimmedFolder=$inputsPath"/trimmed"
 
 # move to outputs directory
 cd "$outputsPath"
