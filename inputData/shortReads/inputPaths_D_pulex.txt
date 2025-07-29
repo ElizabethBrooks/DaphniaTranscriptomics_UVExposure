@@ -1,0 +1,5 @@
+species: D_pulex
+adapter: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed/data/TruSeq3-PE.fa:2:30:10
+genomeReference: /afs/crc.nd.edu/group/pfrenderlab/mendel/ebrooks/daphnia_pulex/KAP4/NCBI/GCF_021134715.1/ncbi_dataset/data/GCF_021134715.1/GCF_021134715.1_ASM2113471v1_genomic.fna
+genomeFeatures: /afs/crc.nd.edu/group/pfrenderlab/mendel/ebrooks/daphnia_pulex/KAP4/NCBI/GCF_021134715.1/ncbi_dataset/data/GCF_021134715.1/genomic.gff
+outputs: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_test
