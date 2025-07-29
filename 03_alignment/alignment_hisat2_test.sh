@@ -9,7 +9,7 @@
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
 # usage: qsub alignment_hisat2_test.sh
-## job 1928435
+## job 1928481
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -29,6 +29,7 @@ projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # set inputs absolute path
+inputsPath=$inputsPath"/"$projectDir
 trimmedFolder=$inputsPath"/trimmed"
 
 # move to outputs directory
