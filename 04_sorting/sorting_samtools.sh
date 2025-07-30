@@ -8,7 +8,7 @@
 # Script to perform samtools sorting of trimmed, then aligned
 # paired end reads
 # usage: qsub sorting_samtools.sh sortingMethod alignedFolder optionalAssembledFolder
-# usage Ex: qsub sorting_samtools.sh name aligned_hisat2
+# usage Ex: qsub sorting_samtools.sh name
 ## job 
 
 #Required modules for ND CRC servers
@@ -38,7 +38,7 @@ projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # setup the inputs path
-inputsPath=$outputsPath"/aligned_hisat2"
+inputsPath=$outputsPath"/aligned"
 
 #Move to outputs directory
 cd "$outputsPath"
