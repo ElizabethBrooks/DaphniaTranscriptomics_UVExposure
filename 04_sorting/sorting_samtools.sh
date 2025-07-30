@@ -9,6 +9,7 @@
 # paired end reads
 # usage: qsub sorting_samtools.sh sortingMethod alignedFolder optionalAssembledFolder
 # usage Ex: qsub sorting_samtools.sh name aligned_hisat2
+## job 
 
 #Required modules for ND CRC servers
 module load bio
@@ -37,7 +38,7 @@ projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # setup the inputs path
-inputsPath=$outputsPath"/aligned"
+inputsPath=$outputsPath"/aligned_hisat2"
 
 #Move to outputs directory
 cd "$outputsPath"
@@ -57,7 +58,7 @@ inputOutFile="$outputFolder"/"$outputFolder"_summary.txt
 samtools --version > $inputOutFile
 
 #Loop through all reads and sort sam/bam files for input to samtools
-for f1 in "$inputsPath"/"$2"/*/; do
+for f1 in $inputsPath"/"*/; do
 	#Name of aligned file
 	curAlignedSample="$f1"accepted_hits.bam
 	#Trim file path from current folder name
