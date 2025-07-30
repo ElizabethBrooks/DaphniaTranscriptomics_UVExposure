@@ -30,8 +30,11 @@ fi
 
 #Retrieve aligned reads input absolute path
 inputsPath=$(grep "aligningGenome:" ../InputData/outputPaths.txt | tr -d " " | sed "s/aligningGenome://g")
-#Retrieve sorting outputs absolute path
-outputsPath="$inputsPath"
+# Retrieve paired reads absolute path for alignment
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+# Make a new directory for project analysis
+projectDir=$(basename $readPath)
+outputsPath=$outputsPath"/"$projectDir
 
 #Move to outputs directory
 cd "$outputsPath"
@@ -58,15 +61,11 @@ for f1 in "$inputsPath"/"$2"/*/; do
 	curSampleNoPath=$(basename "$f1")
 	#Create directory for current sample outputs
 	mkdir "$outputFolder"/"$curSampleNoPath"
-	#Output current sample name to summary file
-	echo "$curSampleNoPath" >> $inputOutFile
 	#Run samtools to prepare mapped reads for sorting by name
 	#using 8 threads
 	echo "Sample $curSampleNoPath is being name sorted..."
 	samtools sort -@ 4 -n -o "$outputFolder"/"$curSampleNoPath"/sortedName.bam -T /tmp/"$curSampleNoPath".sortedName.bam "$curAlignedSample"
 	echo "Sample $curSampleNoPath has been name sorted!"
-	#Add run inputs to output summary file
-	echo samtools sort -@ 4 -n -o "$outputFolder"/"$curSampleNoPath"/sortedName.bam -T /tmp/"$curSampleNoPath".sortedName.bam "$curAlignedSample" >> "$inputOutFile"
 	#Determine which sorting method is to be performed
 	if [[ "$methodTag" == "Coordinate" ]]; then
 		#Run fixmate -m to update paired-end flags for singletons
@@ -86,10 +85,6 @@ for f1 in "$inputsPath"/"$2"/*/; do
 		# index bam files
 		samtools index -@ 4 "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
 		samtools index -@ 4 "$outputFolder"/"$curSampleNoPath"/markedDups.bam
-		#Add run inputs to output summary file
-		echo samtools fixmate -m "$outputFolder"/"$curSampleNoPath"/sortedName.bam "$outputFolder"/"$curSampleNoPath"/sortedFixed.bam >> "$inputOutFile"
-		echo samtools sort "$flags" -o "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam -T /tmp/"$curSampleNoPath".sorted.bam "$outputFolder"/"$curSampleNoPath"/sortedFixed.bam >> "$inputOutFile"
-		#echo samtools markdup -r "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam "$outputFolder"/"$curSampleNoPath"/markedDups.bam >> "$inputOutFile"
 	else
 		#Run fixmate -m to update paired-end flags for singletons
 		echo "Sample $curSampleNoPath singleton flags are being updated..."
@@ -98,9 +93,6 @@ for f1 in "$inputsPath"/"$2"/*/; do
 		rm "$outputFolder"/"$curSampleNoPath"/sortedName.bam
 		#Remove duplicate reads
 		samtools markdup -r "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam "$outputFolder"/"$curSampleNoPath"/markedDups.bam
-		#Add run inputs to output summary file
-		echo samtools fixmate -m "$outputFolder"/"$curSampleNoPath"/sortedName.bam "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam >> "$inputOutFile"
-		#echo samtools markdup -r "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam "$outputFolder"/"$curSampleNoPath"/markedDups.bam >> "$inputOutFile"
 	fi
 done
 #Copy previous summaries

@@ -9,7 +9,7 @@
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
 # usage: qsub alignment_hisat2_test.sh
-## job 1928481
+## job 1928484
 
 #Required modules for ND CRC servers
 module load bio/2.0
