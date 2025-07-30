@@ -44,7 +44,7 @@ inputsPath=$outputsPath"/aligned"
 cd "$outputsPath"
 
 # create outputs directory
-outputFolder="sorted"$methodTag"_samtoolsHisat2"
+outputFolder="sorted_"$methodTag
 mkdir "$outputFolder"
 # check if the folder already exists
 if [ $? -ne 0 ]; then
