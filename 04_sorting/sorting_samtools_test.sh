@@ -2,13 +2,13 @@
 #$ -M ebrooks5@nd.edu
 #$ -m abe
 #$ -r n
-#$ -N sorting_samtools_jobOutput
+#$ -N sorting_samtools_test_jobOutput
 #$ -pe smp 4
 
 # Script to perform samtools sorting of trimmed, then aligned
 # paired end reads
-# usage: qsub sorting_samtools.sh sortingMethod alignedFolder optionalAssembledFolder
-# usage Ex: qsub sorting_samtools.sh name aligned_hisat2
+# usage: qsub sorting_samtools_test.sh sortingMethod alignedFolder optionalAssembledFolder
+# usage Ex: qsub sorting_samtools_test.sh name aligned_hisat2
 
 #Required modules for ND CRC servers
 module load bio
@@ -29,7 +29,7 @@ else
 fi
 
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 # Make a new directory for project analysis
