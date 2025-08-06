@@ -3,4 +3,4 @@ pairedReads: /afs/crc/group/pfrenderlab/curie/D_melanica_RNA_UV/Pfrender_MP-3533
 adapter: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed/data/TruSeq3-PE.fa:2:30:10
 genomeReference: /afs/crc.nd.edu/group/pfrenderlab/mendel/DaphniaGenomes/1_all_chromosome_assemblies_and_annotation_June2024/D.melanica_CON6_annotation/D.melanica_1.0.masked.fasta
 genomeFeatures: /afs/crc.nd.edu/group/pfrenderlab/mendel/DaphniaGenomes/1_all_chromosome_assemblies_and_annotation_June2024/D.melanica_CON6_annotation/D.melanica_1.0.masked.gtf
-outputs: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed
+outputs: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_ZQ
