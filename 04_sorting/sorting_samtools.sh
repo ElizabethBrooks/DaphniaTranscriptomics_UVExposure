@@ -71,7 +71,7 @@ for f1 in $inputsPath"/"*/; do
 	samtools sort -@ 4 -n -o "$outputFolder"/"$curSampleNoPath"/sortedName.bam -T /tmp/"$curSampleNoPath".sortedName.bam "$curAlignedSample"
 	echo "Sample $curSampleNoPath has been name sorted!"
 	#Determine which sorting method is to be performed
-	if [[ "$methodTag" == "Coordinate" ]]; then
+	if [[ "$methodTag" == "coordinate" ]]; then
 		#Run fixmate -m to update paired-end flags for singletons
 		echo "Sample $curSampleNoPath singleton flags are being updated..."
 		samtools fixmate -m "$outputFolder"/"$curSampleNoPath"/sortedName.bam "$outputFolder"/"$curSampleNoPath"/sortedFixed.bam
@@ -96,7 +96,7 @@ for f1 in $inputsPath"/"*/; do
 		echo "Sample $curSampleNoPath singleton flags have been updated!"
 		rm "$outputFolder"/"$curSampleNoPath"/sortedName.bam
 		#Remove duplicate reads
-		samtools markdup -r "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam "$outputFolder"/"$curSampleNoPath"/markedDups.bam
+		#samtools markdup -r "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam "$outputFolder"/"$curSampleNoPath"/markedDups.bam
 	fi
 done
 #Copy previous summaries
