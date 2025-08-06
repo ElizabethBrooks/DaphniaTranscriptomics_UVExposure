@@ -10,7 +10,7 @@
 # Usage Ex: qsub counting_htseq.sh sorted_name
 
 #Required modules for ND CRC servers
-module load bio
+module load bio/3.0
 #module load bio/python/2.7.14
 #module load bio/htseq/0.11.2
 
