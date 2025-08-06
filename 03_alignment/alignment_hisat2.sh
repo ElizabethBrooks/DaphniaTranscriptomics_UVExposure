@@ -11,30 +11,34 @@
 # usage: qsub alignment_hisat2.sh
 ## ZQ D melanica data - run 1
 ## job 1845224
-# usage: qsub alignment_hisat2.sh
 ## ZQ D melanica data
 ## job 1894531
+## EGAPx D melanica data
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
 #module load bio/hisat2/2.1.0
 
 #Retrieve genome reference absolute path for alignment
-#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
+#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_ZQ_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
 buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
 # Retrieve analysis outputs absolute path
-#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+# retrieve input trimmed reads path
+inputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
+inputsPath=$inputsPath"/"$projectDir
 
 # set inputs absolute path
-trimmedFolder=$outputsPath"/trimmed"
+trimmedFolder=$inputsPath"/trimmed"
 
 # move to outputs directory
 cd "$outputsPath"

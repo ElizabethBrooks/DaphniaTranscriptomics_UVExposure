@@ -14,11 +14,11 @@
 module load bio/2.0
 
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 # Retrieve adapter absolute path for alignment
-adapterPath=$(grep "adapter:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/adapter://g")
+adapterPath=$(grep "adapter:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/adapter://g")
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
