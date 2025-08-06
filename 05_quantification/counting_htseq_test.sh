@@ -19,9 +19,9 @@ module load bio/3.0
 sortedFolder=$1
 
 #Retrieve genome features absolute path for alignment
-genomeFile=$(grep "genomeFeatures:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/genomeFeatures://g")
+genomeFile=$(grep "genomeFeatures:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/genomeFeatures://g")
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 # Make a new directory for project analysis

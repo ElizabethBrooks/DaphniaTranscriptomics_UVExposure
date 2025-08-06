@@ -10,6 +10,8 @@
 # usage: qsub sorting_samtools.sh sortingMethod alignedFolder optionalAssembledFolder
 # usage Ex: qsub sorting_samtools.sh name
 ## job 1931639
+# usage Ex: qsub sorting_samtools.sh coordinate
+## job 1943087
 
 #Required modules for ND CRC servers
 module load bio
