@@ -61,13 +61,13 @@ for f1 in "$inputsPath"/*/*.bam; do
 		#Flag to output features in sam format
 		#-o "$outputFolder"/"$curSampleNoPath"/counted.sam
 		htseq-count -f bam -a 60 -s no -m union -t gene -i ID "$curAlignedSample" "$genomeFile" > "$outputFolder"/"$curSampleNoPath"/counts.txt
-	elif [[ $sortedFolder  == "sorted_coordinate" ]]; then
+	#elif [[ $sortedFolder  == "sorted_coordinate" ]]; then
 		#Use coordinate sorted flag
 		#https://github.com/simon-anders/htseq/issues/37
 		#--secondary-alignments ignore --supplementary-alignments ignore
 		#Flag to output features in sam format
 		#-o "$outputFolder"/"$curSampleNoPath"/counted.sam
-		htseq-count -f bam -a 60 -r pos -s no -m union -t gene -i ID "$curAlignedSample" "$genomeFile" > "$outputFolder"/"$curSampleNoPath"/counts.txt
+		#htseq-count -f bam -a 60 -r pos -s no -m union -t gene -i ID "$curAlignedSample" "$genomeFile" > "$outputFolder"/"$curSampleNoPath"/counts.txt
 	else
 		echo "ERROR: The bam file "$f1" was not found... exiting"
 		exit 1
