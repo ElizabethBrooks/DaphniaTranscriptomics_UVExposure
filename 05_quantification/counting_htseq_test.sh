@@ -8,7 +8,7 @@
 # paired end reads
 # usage: qsub counting_htseq.sh sortedFolder
 # usage Ex: qsub counting_htseq.sh sorted_coordinate
-## job
+## job 1945759
 
 #Required modules for ND CRC servers
 module load bio/3.0

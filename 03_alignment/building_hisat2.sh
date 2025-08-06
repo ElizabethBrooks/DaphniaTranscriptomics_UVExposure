@@ -5,20 +5,26 @@
 #$ -N building_hisat2_jobOutput
 #$ -pe smp 4
 
-#Script to generate a hisat2 genome refernce build folder
-#Usage: qsub building_hisat2.sh
+# script to generate a hisat2 genome refernce build folder
+# usage: qsub building_hisat2.sh
+## ZQ D melanica data
 ## job 1834157
+## EGAPx D melanica data
+## job
 
 #Required modules for ND CRC servers
 module load bio/2.0
 #module load bio/hisat2/2.1.0
 
 #Retrieve genome reference absolute path for alignment
-buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
-#Retrieve build outputs absolute path
-outputsPath=$(grep "outputs:" ../inputData/shortReads/inputPaths_D_melanica.txt | tr -d " " | sed "s/outputs://g")
+#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
+buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
+# Retrieve analysis outputs absolute path
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
