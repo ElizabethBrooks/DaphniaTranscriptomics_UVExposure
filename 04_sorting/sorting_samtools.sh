@@ -9,7 +9,7 @@
 # paired end reads
 # usage: qsub sorting_samtools.sh sortingMethod alignedFolder optionalAssembledFolder
 # usage Ex: qsub sorting_samtools.sh name
-## job 
+## job 1931639
 
 #Required modules for ND CRC servers
 module load bio
@@ -18,11 +18,11 @@ module load bio
 if [[ "$1" == "name" || "$1" == "Name" || "$1" == "n" || "$1" == "N" ]]; then
 	#Name sorted flag with num threads flag
 	flags="-@ 4 -n"
-	methodTag="Name"
+	methodTag="name"
 elif [[ "$1" == "coordinate" || "$1" == "Coordinate" || "$1" == "c" || "$1" == "C" ]]; then
 	#Coordinate sorted with num threads flag
 	flags="-@ 4"
-	methodTag="Coordinate"
+	methodTag="coordinate"
 else
 	#Report error with input flag
 	echo "ERROR: a flag for sorting method (name or coordinate) is expected... exiting"
