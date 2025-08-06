@@ -54,14 +54,14 @@ for f1 in "$inputsPath"/*/*.bam; do
 	#Count reads using htseq-count
 	echo "Sample $curSampleNoPath is being counted..."
 	#Determine which flags to use based on sorting method
-	if [[ "$1"  == *name* ]]; then
+	if [[ $sortedFolder  == "sorted_name" ]]; then
 		#Use name sorted flag (default)
 		#https://github.com/simon-anders/htseq/issues/37
 		#--secondary-alignments ignore --supplementary-alignments ignore
 		#Flag to output features in sam format
 		#-o "$outputFolder"/"$curSampleNoPath"/counted.sam
 		htseq-count -f bam -a 60 -s no -m union -t gene -i ID "$curAlignedSample" "$genomeFile" > "$outputFolder"/"$curSampleNoPath"/counts.txt
-	elif [[ "$1"  == *coordinate* ]]; then
+	elif [[ $sortedFolder  == "sorted_coordinate" ]]; then
 		#Use coordinate sorted flag
 		#https://github.com/simon-anders/htseq/issues/37
 		#--secondary-alignments ignore --supplementary-alignments ignore
@@ -74,8 +74,3 @@ for f1 in "$inputsPath"/*/*.bam; do
 	fi
 	echo "Sample $curSampleNoPath has been counted!"
 done
-#Copy previous summaries
-cp "$inputsDir"/*.txt "$outputFolder"
-
-# clean up
-rm -r $inputsDir
