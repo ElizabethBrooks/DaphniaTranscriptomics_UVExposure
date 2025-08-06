@@ -20,17 +20,14 @@ buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.t
 # Retrieve analysis outputs absolute path
 outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
-# Retrieve analysis inputs absolute path
-inputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # set inputs absolute path
-inputsPath=$inputsPath"/"$projectDir
-trimmedFolder=$inputsPath"/trimmed"
+trimmedFolder=$outputsPath"/trimmed"
 
 # move to outputs directory
 cd "$outputsPath"
