@@ -10,6 +10,9 @@
 # usage Ex: qsub counting_htseq.sh sorted_coordinate
 ## ZQ D melanica data
 ## job 1945636
+# usage Ex: qsub counting_htseq.sh sorted_coordinate
+## EGAPx D melanica data
+## job 1950551
 
 #Required modules for ND CRC servers
 module load bio/3.0

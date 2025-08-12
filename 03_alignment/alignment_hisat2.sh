@@ -14,7 +14,7 @@
 ## ZQ D melanica data
 ## job 1894531
 ## EGAPx D melanica data
-## job 
+## job 1947836
 
 #Required modules for ND CRC servers
 module load bio/2.0

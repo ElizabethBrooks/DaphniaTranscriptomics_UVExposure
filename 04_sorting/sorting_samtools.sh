@@ -14,6 +14,9 @@
 # usage Ex: qsub sorting_samtools.sh coordinate
 ## ZQ D melanica data
 ## job 1943087
+# usage Ex: qsub sorting_samtools.sh coordinate
+## EGAPx D melanica data
+## job 1949843
 
 #Required modules for ND CRC servers
 module load bio
