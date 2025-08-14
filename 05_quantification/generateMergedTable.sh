@@ -15,14 +15,17 @@ for i in $inputsPath"/"*"/"; do
 	# clean up sample name
 	newName=$(basename $i | sed "s/_S.*_L004//g")
 	# status message
-	echo "Processing $newName"
+	echo "Processing sample $newName..."
 	# add sample name to the sample outputs
-	echo $newName > $inputsPath"/counts_merged.tmp.csv"
+	echo $newName > $inputsPath"/counts_sample.tmp.csv"
 	# add counts to the sample outputs
-	cat $i/counts.txt | cut -f2 >> $inputsPath"/counts_merged.tmp.csv"
+	cat $i/counts.txt | cut -f2 >> $inputsPath"/counts_sample.tmp.csv"
 	# merge sample counts
-	paste -d, $inputsPath"/counts_merged.csv" $inputsPath"/counts_merged.tmp.csv" >> $inputsPath"/counts_merged.csv"
+	paste -d, $inputsPath"/counts_merged.tmp.csv" $inputsPath"/counts_sample.tmp.csv" > $inputsPath"/counts_merged.csv"
+	# update the merged counts data
+	cat $inputsPath"/counts_merged.csv" > $inputsPath"/counts_merged.tmp.csv"
 done
 
 # clean up
+rm $inputsPath"/counts_sample.tmp.csv"
 rm $inputsPath"/counts_merged.tmp.csv"
