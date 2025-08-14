@@ -10,7 +10,7 @@
 # test
 ## job 1928389
 # EGAPx
-## job
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
