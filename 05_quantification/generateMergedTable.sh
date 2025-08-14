@@ -12,10 +12,16 @@ cat $inputsPath"/MUV10_S10_L004/counts.txt" | cut -f1 >> $inputsPath"/counts_mer
 
 # merge counts for each sample
 for i in $inputsPath"/"*"/"; do 
+	# clean up sample name
 	newName=$(basename $i | sed "s/_S.*_L004//g")
+	# status message
+	echo "Processing $newName"
+	# add sample name to the sample outputs
 	echo $newName > $inputsPath"/counts_merged.tmp.csv"
+	# add counts to the sample outputs
 	cat $i/counts.txt | cut -f2 >> $inputsPath"/counts_merged.tmp.csv"
-	paste -d, $inputsPath"/counts_merged.csv" $inputsPath"/counts_merged.tmp.csv" >> $inputsPath"/counts_merged.tmp.csv"
+	# merge sample counts
+	paste -d, $inputsPath"/counts_merged.csv" $inputsPath"/counts_merged.tmp.csv" >> $inputsPath"/counts_merged.csv"
 done
 
 # clean up
