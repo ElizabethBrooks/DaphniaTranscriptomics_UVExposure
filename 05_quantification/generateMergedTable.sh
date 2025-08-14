@@ -7,8 +7,8 @@
 inputsPath="/scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx/Pfrender_MP-3533_250512_CMG/counted"
 
 # initialize the merged counts file
-echo "gene" > $inputsPath"/counts_merged.csv"
-cat $inputsPath"/MUV10_S10_L004/counts.txt" | cut -f1 >> $inputsPath"/counts_merged.csv"
+echo "gene" > $inputsPath"/counts_merged.tmp.csv"
+cat $inputsPath"/MUV10_S10_L004/counts.txt" | cut -f1 >> $inputsPath"/counts_merged.tmp.csv"
 
 # merge counts for each sample
 for i in $inputsPath"/"*"/"; do 
