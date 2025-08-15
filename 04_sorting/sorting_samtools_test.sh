@@ -16,7 +16,7 @@
 ## job 1943088
 # EGAPx
 # usage Ex: qsub sorting_samtools_test.sh coordinate
-## job
+## job 1981589
 
 #Required modules for ND CRC servers
 module load bio

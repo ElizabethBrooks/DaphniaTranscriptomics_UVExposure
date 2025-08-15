@@ -7,8 +7,12 @@
 # script to perform htseq-count counting of trimmed, aligned, then name sorted
 # paired end reads
 # usage: qsub counting_htseq_test.sh sortedFolder
+# test
 # usage Ex: qsub counting_htseq_test.sh sorted_coordinate
 ## job 1947754
+# EGAPx
+# usage Ex: qsub counting_htseq_test.sh sorted_coordinate
+## job 
 
 #Required modules for ND CRC servers
 module load bio/3.0
@@ -19,11 +23,14 @@ module load bio/3.0
 sortedFolder=$1
 
 #Retrieve genome features absolute path for alignment
-genomeFile=$(grep "genomeFeatures:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/genomeFeatures://g")
+#genomeFile=$(grep "genomeFeatures:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/genomeFeatures://g")
+genomeFile=$(grep "genomeFeatures:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/genomeFeatures://g")
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
