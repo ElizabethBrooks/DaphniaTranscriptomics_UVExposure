@@ -8,10 +8,15 @@
 # Script to perform samtools sorting of trimmed, then aligned
 # paired end reads
 # usage: qsub sorting_samtools_test.sh sortingMethod alignedFolder optionalAssembledFolder
+# test
 # usage Ex: qsub sorting_samtools_test.sh name
 ## job 1931640
+# test
 # usage Ex: qsub sorting_samtools_test.sh coordinate
 ## job 1943088
+# EGAPx
+# usage Ex: qsub sorting_samtools_test.sh coordinate
+## job
 
 #Required modules for ND CRC servers
 module load bio
@@ -32,9 +37,11 @@ else
 fi
 
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
