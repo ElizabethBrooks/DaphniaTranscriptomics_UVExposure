@@ -12,7 +12,7 @@
 ## job 1947754
 # EGAPx
 # usage Ex: qsub counting_htseq_test.sh sorted_coordinate
-## job 
+## job 1982353
 
 #Required modules for ND CRC servers
 module load bio/3.0

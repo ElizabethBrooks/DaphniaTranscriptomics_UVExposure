@@ -4,8 +4,9 @@
 # usage: bash generateMergedTable.sh
 
 # set the inputs path
-inputsPath="/scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_test/Pfrender_MP-3533_250512_CMG/counted"
+#inputsPath="/scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_test/Pfrender_MP-3533_250512_CMG/counted"
 #inputsPath="/scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx/Pfrender_MP-3533_250512_CMG/counted"
+inputsPath="/scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx_test/Pfrender_MP-3533_250512_CMG/counted"
 
 # initialize the merged counts file
 echo "gene" > $inputsPath"/counts_merged.tmp.csv"
