@@ -17,7 +17,7 @@
 ## job 1947836
 # un-conc and al-conc
 # EGAPx D melanica data
-## job 2069691
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -82,11 +82,13 @@ for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
 	#Run hisat2 with default settings
 	echo "Sample $curSampleNoPath is being aligned and converted..."
 	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
-	--summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt --un-conc-gz "$curSample".un_conc.fq.gz --al-conc-gz "$curSample".al_conc.fq.gz
+	--summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt --un-conc "$curSample".un_conc.fq --al-conc "$curSample".al_conc.fq
 	#Convert output sam files to bam format for downstream analysis
 	samtools view -@ 4 -bS "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam > "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
 	#Remove the now converted .sam file
 	rm "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam
 	# status message
 	echo "Sample $curSampleNoPath has been aligned and converted!"
+	# break for testing
+	break
 done
