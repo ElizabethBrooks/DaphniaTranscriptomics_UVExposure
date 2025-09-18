@@ -12,13 +12,18 @@
 # run 1
 # test
 ## job 1928484
-# EGAPx
+# EGAPx test
 ## job 1980157
 # run 2
 # test 
 ## job 2050275
-# EGAPx
-## job 
+# EGAPx test
+## job 2050277
+# un-conc and al-conc
+# test
+## job
+# EGAPx test
+## job
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -48,7 +53,7 @@ trimmedFolder=$inputsPath"/trimmed"
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/aligned"
+outputFolder=$outputsPath"/aligned_conc"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
@@ -82,7 +87,8 @@ for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
 	mkdir "$outputFolder"/"$curSampleNoPath"
 	#Run hisat2 with default settings
 	echo "Sample $curSampleNoPath is being aligned and converted..."
-	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam --summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt
+	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
+	--summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt --un-conc-gz "$curSample".un_conc.fq.gz --al-conc-gz "$curSample".al_conc.fq.gz
 	#Convert output sam files to bam format for downstream analysis
 	samtools view -@ 4 -bS "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam > "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
 	#Remove the now converted .sam file
