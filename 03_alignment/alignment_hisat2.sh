@@ -81,8 +81,8 @@ for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
 	mkdir "$outputFolder"/"$curSampleNoPath"
 	#Run hisat2 with default settings
 	echo "Sample $curSampleNoPath is being aligned and converted..."
-	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
-	--summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt --un-conc "$curSample".un_conc.fq --al-conc "$curSample".al_conc.fq
+	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz --summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt \
+	--un-conc-gz "$curSample".un_conc.fq.gz --al-conc-gz "$curSample".al_conc.fq.gz
 	#Convert output sam files to bam format for downstream analysis
 	samtools view -@ 4 -bS "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam > "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
 	#Remove the now converted .sam file
