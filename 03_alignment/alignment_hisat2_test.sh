@@ -30,14 +30,14 @@ module load bio/2.0
 #module load bio/hisat2/2.1.0
 
 #Retrieve genome reference absolute path for alignment
-buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
-#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
+#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
+buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
 # Retrieve analysis outputs absolute path
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
-#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
-#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
 # retrieve input trimmed reads path
 inputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 
@@ -87,8 +87,8 @@ for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
 	mkdir "$outputFolder"/"$curSampleNoPath"
 	#Run hisat2 with default settings
 	echo "Sample $curSampleNoPath is being aligned and converted..."
-	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz  \
-	--summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt --un-conc-gz "$curSample".un_conc.fq.gz --al-conc-gz "$curSample".al_conc.fq.gz
+	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
+	--un-conc-gz "$curSample".un_conc.fq.gz --al-conc-gz "$curSample".al_conc.fq.gz --summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt
 	#Convert output sam files to bam format for downstream analysis
 	samtools view -@ 4 -bS "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam > "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
 	#Remove the now converted .sam file
