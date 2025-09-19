@@ -9,15 +9,9 @@
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
 # usage: qsub alignment_hisat2.sh
-# ZQ D melanica data - run 1
-## job 1845224
-# ZQ D melanica data
-## job 1894531
-# EGAPx D melanica data
-## job 1947836
 # un-conc and al-conc
 # EGAPx D melanica data
-## job 2071745
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -32,22 +26,15 @@ outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_melani
 # Retrieve paired reads absolute path for alignment
 #readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
-# retrieve input trimmed reads path
-inputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
-
-# Make a new directory for project analysis
-projectDir=$(basename $readPath)
-outputsPath=$outputsPath"/"$projectDir
-inputsPath=$inputsPath"/"$projectDir
 
 # set inputs absolute path
-trimmedFolder=$inputsPath"/trimmed"
+inputsFolder=$outputsPath"/aligned_conc"
 
 # move to outputs directory
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/aligned_conc"
+outputFolder=$outputsPath"/realigned_conc"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
@@ -69,19 +56,17 @@ buildFileNoEx=$(echo $buildFileNoPath | sed 's/\.fasta//' | sed 's/\.fna//' | se
 
 #Loop through all forward and reverse paired reads and run Hisat2 on each pair
 # using 8 threads and samtools to convert output sam files to bam
-for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
+for f1 in $inputsFolder"/"*/; do
 	# status message
-	echo "Processing file $f1 ..."
-	#Trim extension from current file name
-	curSample=$(echo $f1 | sed 's/\.R1_001\.fq\.gz//')
+	echo "Processing directory $f1 ..."
+	curSample=$f1
 	#Trim file path from current file name
 	curSampleNoPath=$(basename $f1)
-	curSampleNoPath=$(echo $curSampleNoPath | sed 's/\.R1_001\.fq\.gz//')
 	#Create directory for current sample outputs
 	mkdir "$outputFolder"/"$curSampleNoPath"
 	#Run hisat2 with default settings
 	echo "Sample $curSampleNoPath is being aligned and converted..."
-	hisat2 -p 4 -q -x "$buildOut"/"$buildFileNoEx" -1 "$f1" -2 "$curSample".R2_001.fq.gz -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
+	hisat2 -p 4 -q -x $buildOut"/"$buildFileNoEx -1 $curSample"/un_conc.fq.1.gz" -2 $curSample"/un_conc.fq.2.gz" -S "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam \
 	--un-conc-gz "$outputFolder"/"$curSampleNoPath"/un_conc.fq.gz --al-conc-gz "$outputFolder"/"$curSampleNoPath"/al_conc.fq.gz --summary-file "$outputFolder"/"$curSampleNoPath"/alignedSummary.txt
 	#Convert output sam files to bam format for downstream analysis
 	samtools view -@ 4 -bS "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam > "$outputFolder"/"$curSampleNoPath"/accepted_hits.bam
