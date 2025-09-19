@@ -27,6 +27,10 @@ outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_melani
 #readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 
+# Make a new directory for project analysis
+projectDir=$(basename $readPath)
+outputsPath=$outputsPath"/"$projectDir
+
 # set inputs absolute path
 inputsFolder=$outputsPath"/aligned_conc"
 
