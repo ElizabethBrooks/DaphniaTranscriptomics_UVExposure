@@ -17,7 +17,7 @@
 ## job 1947836
 # un-conc and al-conc
 # EGAPx D melanica data
-## job 2071553
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -89,6 +89,4 @@ for f1 in $trimmedFolder"/"*.R1_001.fq.gz; do
 	rm "$outputFolder"/"$curSampleNoPath"/accepted_hits.sam
 	# status message
 	echo "Sample $curSampleNoPath has been aligned and converted!"
-	# break for testing
-	break
 done
