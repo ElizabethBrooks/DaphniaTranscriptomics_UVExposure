@@ -8,10 +8,10 @@
 # Script to perform hisat2 alignment of trimmed
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
-# usage: qsub alignment_hisat2.sh
+# usage: qsub realignment_hisat2.sh
 # un-conc and al-conc
 # EGAPx D melanica data
-## job 
+## job 2073936
 
 #Required modules for ND CRC servers
 module load bio/2.0
