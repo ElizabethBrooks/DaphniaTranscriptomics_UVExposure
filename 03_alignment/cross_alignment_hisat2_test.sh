@@ -12,7 +12,7 @@
 # usage ex: qsub cross_alignment_hisat2_test.sh /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx
 # un-conc and al-conc
 # EGAPx test
-## job 
+## job 2076807
 
 #Required modules for ND CRC servers
 module load bio/2.0
