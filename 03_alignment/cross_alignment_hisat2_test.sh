@@ -8,12 +8,11 @@
 # Script to perform hisat2 alignment of trimmed
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
-# usage: qsub realignment_hisat2_test.sh
+# usage: qsub cross_alignment_hisat2_test.sh inputsPath
+# usage ex: qsub cross_alignment_hisat2_test.sh /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx
 # un-conc and al-conc
-# test
-## job 2073938
 # EGAPx test
-## job 2073940
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
@@ -34,13 +33,14 @@ projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # set inputs absolute path
-inputsFolder=$outputsPath"/aligned_conc"
+inputsPath=$1
+inputsFolder=$inputsPath"/"$projectDir"/aligned_conc"
 
 # move to outputs directory
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/realigned_conc"
+outputFolder=$outputsPath"/cross_aligned_conc"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists

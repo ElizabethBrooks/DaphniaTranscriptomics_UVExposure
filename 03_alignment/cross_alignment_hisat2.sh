@@ -2,45 +2,45 @@
 #$ -M ebrooks5@nd.edu
 #$ -m abe
 #$ -r n
-#$ -N alignment_hisat2_test_jobOutput
+#$ -N alignment_hisat2_jobOutput
 #$ -pe smp 4
 
 # Script to perform hisat2 alignment of trimmed
 # paired end reads
 # Note that a hisat2 genome refernce build folder needs to be generated first
-# usage: qsub realignment_hisat2_test.sh
+# usage: qsub cross_alignment_hisat2.sh inputsPath
+# usage ex: qsub cross_alignment_hisat2.sh /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx_test
 # un-conc and al-conc
-# test
-## job 2073938
-# EGAPx test
-## job 2073940
+# EGAPx D melanica data
+## job 
 
 #Required modules for ND CRC servers
 module load bio/2.0
 #module load bio/hisat2/2.1.0
 
 #Retrieve genome reference absolute path for alignment
-#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
-buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
+#buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_ZQ_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
+buildFile=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
 # Retrieve analysis outputs absolute path
-#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
-outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/outputs://g")
+#outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
+outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
 # Retrieve paired reads absolute path for alignment
-#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
-readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_pulex.txt" | tr -d " " | sed "s/pairedReads://g")
+#readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
+readPath=$(grep "pairedReads:" ../"inputData/shortReads/inputPaths_EGAPx_D_melanica.txt" | tr -d " " | sed "s/pairedReads://g")
 
 # Make a new directory for project analysis
 projectDir=$(basename $readPath)
 outputsPath=$outputsPath"/"$projectDir
 
 # set inputs absolute path
-inputsFolder=$outputsPath"/aligned_conc"
+inputsPath=$1
+inputsFolder=$inputsPath"/"$projectDir"/aligned_conc"
 
 # move to outputs directory
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/realigned_conc"
+outputFolder=$outputsPath"/cross_aligned_conc"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
