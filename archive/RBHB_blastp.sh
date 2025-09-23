@@ -3,12 +3,12 @@
 #$ -m abe
 #$ -r n
 #$ -N RBHB_blastp_jobOutput
-#$ -pe smp 8
+#$ -pe smp 4
 
 # script to use blastp to translate the nucleotide sequences of a reference genome
 # for searching a protein database
 # usage: qsub RBHB_blastp.sh
-## job 
+## job 2077084
 
 # load necessary modules for ND CRC servers
 module load bio/2.0
@@ -35,7 +35,7 @@ outputsPath=$outputsPath"/"$projectDir
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/RBHB_blastp"
+outputFolder=$outputsPath"/RBHB"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
@@ -82,9 +82,13 @@ fi
 # use blastp to search a database
 # output with outfmt6 header:
 # qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
-echo "Beginning reciprocal blastp search..."
-blastp -query "$inputDB" -db "$inputQuery" -outfmt 6 -evalue 0.01 -num_threads 8 > "$outputFolder"/RBHB_melanica_pulex.outfmt6
+echo "Beginning blastp database search..."
+blastp -query "$inputDB" -db "$inputQuery" -outfmt 6 -evalue 0.01 -num_threads 4 > "$outputFolder"/blastp.outfmt6
 echo "Finished blastp database search!"
+# switch query and search paths for reciprocal search
+echo "Beginning reciprocal blastp database search..."
+blastp -query "$inputQuery" -db "$inputDB" -outfmt 6 -evalue 0.01 -num_threads 4 > "$outputFolder"/blastp_reciprocal.outfmt6
+echo "Finished reciprocal blastp database search!"
 
 # status message
 echo "Analysis complete!"

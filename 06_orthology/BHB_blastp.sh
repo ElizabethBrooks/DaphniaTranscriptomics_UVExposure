@@ -2,12 +2,12 @@
 #$ -M ebrooks5@nd.edu
 #$ -m abe
 #$ -r n
-#$ -N RBHB_blastp_jobOutput
+#$ -N BHB_blastp_jobOutput
 #$ -pe smp 8
 
 # script to use blastp to translate the nucleotide sequences of a reference genome
 # for searching a protein database
-# usage: qsub RBHB_blastp.sh
+# usage: qsub BHB_blastp.sh
 ## job 
 
 # load necessary modules for ND CRC servers
@@ -82,9 +82,10 @@ fi
 # use blastp to search a database
 # output with outfmt6 header:
 # qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
-echo "Beginning reciprocal blastp search..."
-blastp -query "$inputDB" -db "$inputQuery" -outfmt 6 -evalue 0.01 -num_threads 8 > "$outputFolder"/RBHB_melanica_pulex.outfmt6
-echo "Finished blastp database search!"
+# switch query and search paths for reciprocal search
+echo "Beginning blastp search..."
+blastp -query "$inputQuery" -db "$inputDB" -outfmt 6 -evalue 0.01 -num_threads 8 > "$outputFolder"/RBHB_pulex_melanica.outfmt6
+echo "Finished reciprocal blastp database search!"
 
 # status message
 echo "Analysis complete!"
