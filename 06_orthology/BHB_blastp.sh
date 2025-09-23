@@ -84,7 +84,7 @@ fi
 # qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
 # switch query and search paths for reciprocal search
 echo "Beginning blastp search..."
-blastp -query "$inputQuery" -db "$inputDB" -outfmt 6 -evalue 0.01 -num_threads 8 > "$outputFolder"/RBHB_pulex_melanica.outfmt6
+blastp -num_threads 8 -query "$inputQuery" -db "$inputDB" -outfmt 6 -evalue 0.01 -num_alignments 1 > "$outputFolder"/RBHB_pulex_melanica.outfmt6
 echo "Finished reciprocal blastp database search!"
 
 # status message
