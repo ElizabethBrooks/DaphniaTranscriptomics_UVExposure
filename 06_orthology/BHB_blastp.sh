@@ -40,8 +40,7 @@ outputFolder=$outputsPath"/RBHB_blastp"
 mkdir "$outputFolder"
 # check if the folder already exists
 if [ $? -ne 0 ]; then
-	echo "The $outputFolder directory already exsists... please remove before proceeding."
-	exit 1
+	echo "The $outputFolder directory already exsists..."
 fi
 
 # name output file of inputs
