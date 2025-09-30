@@ -2,5 +2,6 @@ species: D_pulex
 pairedReads: /afs/crc/group/pfrenderlab/curie/D_melanica_RNA_UV/Pfrender_MP-3533_250512_CMG
 adapter: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed/data/TruSeq3-PE.fa:2:30:10
 genomeReference: /afs/crc.nd.edu/group/pfrenderlab/franklin/daphnia_EGAPx_annotations/EGAPx_v0.3.2/tested_Jan2025/WW_ZQ_tests/D_pulex_KAP4_SRA_noAA/complete.genomic.fna
+proteins: /afs/crc.nd.edu/group/pfrenderlab/franklin/daphnia_EGAPx_annotations/EGAPx_v0.3.2/tested_Jan2025/WW_ZQ_tests/D_pulex_KAP4_SRA_noAA/complete.proteins.faa
 genomeFeatures: /afs/crc.nd.edu/group/pfrenderlab/franklin/daphnia_EGAPx_annotations/EGAPx_v0.3.2/tested_Jan2025/WW_ZQ_tests/D_pulex_KAP4_SRA_noAA/complete.genomic.gff
 outputs: /scratch365/ebrooks5/D_melanica_UV_exposure/short_read_data_processed_EGAPx_test

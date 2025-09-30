@@ -8,17 +8,20 @@
 # script to use blastp to translate the nucleotide sequences of a reference genome
 # for searching a protein database
 # usage: qsub BHB_blastp.sh
-## job 
+## genomeReference
+## job 2083470
+## proteins
+## job
 
 # load necessary modules for ND CRC servers
 module load bio/2.0
 
 # retrieve genome reference absolute path for alignment
-#inputDB=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_ZQ_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
-inputDB=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_melanica.txt | tr -d " " | sed "s/genomeReference://g")
+#inputDB=$(grep "proteins:" ../inputData/shortReads/inputPaths_ZQ_D_melanica.txt | tr -d " " | sed "s/proteins://g")
+inputDB=$(grep "proteins:" ../inputData/shortReads/inputPaths_EGAPx_D_melanica.txt | tr -d " " | sed "s/proteins://g")
 # retrieve genome reference absolute path for alignment
-#inputQuery=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
-inputQuery=$(grep "genomeReference:" ../inputData/shortReads/inputPaths_EGAPx_D_pulex.txt | tr -d " " | sed "s/genomeReference://g")
+#inputQuery=$(grep "proteins:" ../inputData/shortReads/inputPaths_D_pulex.txt | tr -d " " | sed "s/proteins://g")
+inputQuery=$(grep "proteins:" ../inputData/shortReads/inputPaths_EGAPx_D_pulex.txt | tr -d " " | sed "s/proteins://g")
 
 # retrieve analysis outputs absolute path
 #outputsPath=$(grep "outputs:" ../"inputData/shortReads/inputPaths_ZQ_D_melanica.txt" | tr -d " " | sed "s/outputs://g")
@@ -35,7 +38,7 @@ outputsPath=$outputsPath"/"$projectDir
 cd "$outputsPath"
 
 # set output directory name
-outputFolder=$outputsPath"/RBHB_blastp"
+outputFolder=$outputsPath"/RBHB_proteins"
 # create output directory
 mkdir "$outputFolder"
 # check if the folder already exists
