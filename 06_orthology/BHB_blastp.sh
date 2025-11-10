@@ -4,6 +4,7 @@
 #$ -r n
 #$ -N BHB_blastp_jobOutput
 #$ -pe smp 8
+#$ -q largemem
 
 # script to use blastp to translate the nucleotide sequences of a reference genome
 # for searching a protein database
@@ -11,7 +12,7 @@
 ## genomeReference
 ## job 2083470
 ## proteins
-## job
+## job 2102642
 
 # load necessary modules for ND CRC servers
 module load bio/2.0
