@@ -8,7 +8,8 @@
 ##
 
 # set the working directory
-setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/edgeR/treatment_genotype")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/edgeR/treatment_genotype")
+setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/edgeR/treatment_genotype_noPA")
 
 ##
 # Packages
@@ -27,6 +28,24 @@ library(ggplot2)
 library(ghibli)
 library(ggVennDiagram)
 library(edgeR)
+library(dplyr)
+library(rcartocolor)
+library(ggplotify)
+library(pheatmap)
+
+
+##
+# Plotting Palettes
+##
+
+# TO-DO: double check
+# color blind safe plotting palettes
+defaultColors <- palette.colors(palette = "Okabe-Ito")
+blindColors <- c("#000000", "#999999", "#E69F00", "#56B4E9", "#009E73", 
+                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+safeColors <- carto_pal(12, "Safe")
+plotColors <- c(safeColors, blindColors, defaultColors)
+
 
 ##
 # Data
@@ -67,11 +86,11 @@ colData <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_
 #remove_list <- row.names(colData[grepl("Sierra", colData$group),])
 #gene_counts <- subset(gene_counts,select = names(gene_counts) %ni% remove_list)
 #colData <- colData[!grepl("Sierra", colData$group),]
-#gene_counts <- select(gene_counts, -contains("PA"))
-#colData <- colData[!grepl("PA", colData$group),]
-colData <- select(colData, -contains("group"))
-colData <- select(colData, -contains("batch"))
-colData <- select(colData, -contains("tolerance"))
+gene_counts <- select(gene_counts, -contains("PA"))
+colData <- colData[!grepl("PA", colData$group),]
+colData <- dplyr::select(colData, -contains("group"))
+colData <- dplyr::select(colData, -contains("batch"))
+colData <- dplyr::select(colData, -contains("tolerance"))
 
 
 ##
@@ -91,6 +110,7 @@ glm_list <- DGEList(counts=gene_counts, group=glm_group)
 colnames(glm_list) <- rownames(glm_targets)
 
 # parametrize the experimental design with a one-way layout 
+#glm_design <- model.matrix(~ glm_group)
 glm_design <- model.matrix(~ 0 + glm_group)
 #glm_design <- model.matrix(~ 0 + genotype + treatment, data=glm_targets)
 
@@ -116,6 +136,22 @@ glm_list <- calcNormFactors(glm_list)
 # compute counts per million (CPM) using normalized library sizes
 norm_glm_list <- cpm(glm_list, normalized.lib.sizes=TRUE)
 
+# retrieve the number of grouping levels
+stringLevels <- gsub("\\..*","", (levels(glm_group)))
+# setup colors and points
+colors <- plotColors[1:length(stringLevels)]
+#points <- c(0:length(unique(stringLevels)))
+png("sample_pca.png")
+# add extra space to right of plot area and change clipping to figure
+par(mar=c(6.5, 5.5, 5.5, 9.5), xpd=TRUE)
+# PCA plot with distances approximating log2 fold changes
+#plotMDS(list, col=colors[group], pch=points[group], gene.selection="common", main = "Principal Component Analysis")
+plotMDS(glm_list, col=colors[glm_group], gene.selection="common", main = "Principal Component Analysis")
+# place the legend outside the right side of the plot
+#legend("topright", inset=c(-0.5,0), legend=levels(group), pch=points, col=colors)
+legend("topright", inset=c(-0.5,0), legend=levels(glm_group), fill=colors)
+dev.off()
+
 ##
 # GLM Fitting
 ##
@@ -127,7 +163,9 @@ glm_list <- estimateDisp(glm_list, glm_design, robust=TRUE)
 glm_fit <- glmQLFit(glm_list, glm_design, robust=TRUE)
 
 # plot the QL dispersions
+png("QL_dispersions.png")
 plotQLDisp(glm_fit)
+dev.off()
 
 ##
 # Plotting Palettes
@@ -161,8 +199,10 @@ ghibli_subset <- c(ghibli_colors[3], ghibli_colors[6], ghibli_colors[4])
 
 # examine the overall effect of condition
 con.condition <- makeContrasts(set.condition = 
-                               (CON_6.UV + E05.UV + E2_1.UV + GRO_3.UV + NGD_1.UV + PA.UV + R2.UV + Sierra.UV + Y002_3_2.UV + Y019_2_1.UV + Y023_5.UV + Y05.UV) -
-                               (CON_6.VIS + E05.VIS + E2_1.VIS + GRO_3.VIS + NGD_1.VIS + PA.VIS + R2.VIS + Sierra.VIS + Y002_3_2.VIS + Y019_2_1.VIS + Y023_5.VIS + Y05.VIS),
+                               #(CON_6.UV + E05.UV + E2_1.UV + GRO_3.UV + NGD_1.UV + PA.UV + R2.UV + Sierra.UV + Y002_3_2.UV + Y019_2_1.UV + Y023_5.UV + Y05.UV) -
+                               (CON_6.UV + E05.UV + E2_1.UV + GRO_3.UV + NGD_1.UV + R2.UV + Sierra.UV + Y002_3_2.UV + Y019_2_1.UV + Y023_5.UV + Y05.UV) -
+                               #(CON_6.VIS + E05.VIS + E2_1.VIS + GRO_3.VIS + NGD_1.VIS + PA.VIS + R2.VIS + Sierra.VIS + Y002_3_2.VIS + Y019_2_1.VIS + Y023_5.VIS + Y05.VIS),
+                               (CON_6.VIS + E05.VIS + E2_1.VIS + GRO_3.VIS + NGD_1.VIS + R2.VIS + Sierra.VIS + Y002_3_2.VIS + Y019_2_1.VIS + Y023_5.VIS + Y05.VIS),
                                levels = glm_design)
 
 # conduct gene wise statistical tests
@@ -172,13 +212,18 @@ anov.condition <- glmTreat(glm_fit, contrast=con.condition)
 summary(decideTests(anov.condition))
 
 # create MD plot of DE genes
+png("UV_VIS_MD.png")
 plotMD(anov.condition)
-
 # add blue lines to indicate 2-fold changes
 abline(h=c(-1, 1), col="blue")
+dev.off()
 
 # generate table of DE genes
 tagsTbl_condition <- topTags(anov.condition, n=nrow(anov.condition$table), adjust.method="fdr")$table
+# add gene row name tag
+resultsTbl_condition <- as_tibble(tagsTbl_condition, rownames = "gene")
+# output table
+write.table(resultsTbl_condition, "UV_VIS_results.csv", sep=",", row.names=FALSE, quote=FALSE)
 
 # add column for identifying direction of DE gene expression
 tagsTbl_condition$topDE <- "NA"
@@ -190,78 +235,37 @@ tagsTbl_condition$topDE[tagsTbl_condition$logFC > 1 & tagsTbl_condition$FDR < 0.
 tagsTbl_condition$topDE[tagsTbl_condition$logFC < -1 & tagsTbl_condition$FDR < 0.05] <- "DOWN"
 
 # create volcano plot
-ggplot(data=tagsTbl_condition, aes(x=logFC, y=-log10(FDR), color = topDE)) + 
+volcano_condition <- ggplot(data=tagsTbl_condition, aes(x=logFC, y=-log10(FDR), color = topDE)) + 
   geom_point() +
   theme_minimal() +
   scale_colour_discrete(type = ghibli_subset, breaks = c("Up", "Down"))
+# save the plot to a png file
+ggsave("UV_VIS_volcano.png", plot = volcano_condition, bg = "white", device = "png", width = 9, height = 8, units = "in")
 
 # identify significantly DE genes by FDR
 tagsTbl_condition.glm_keep <- tagsTbl_condition$FDR < 0.05
 
 # create filtered results table of DE genes
 tagsTbl_condition_filtered <- tagsTbl_condition[tagsTbl_condition.glm_keep,]
+# add gene row name tag
+resultsTbl_condition_filtered <- as_tibble(tagsTbl_condition_filtered, rownames = "gene")
+# output table
+write.table(resultsTbl_condition_filtered, "UV_VIS_results_sig.csv", sep=",", row.names=FALSE, quote=FALSE)
 
-###
-## group
-###
-
-# examine the overall effect of group
-con.group <- makeContrasts(set.group = 
-                           (CON_6.UV + CON_6.VIS + GRO_3.UV + GRO_3.VIS + NGD_1.VIS + NGD_1.UV + Sierra.UV + Sierra.VIS) -
-                           (E05.UV + E2_1.UV + E05.VIS + E2_1.VIS + R2.UV + R2.VIS + Y002_3_2.VIS + Y019_2_1.VIS + Y023_5.VIS + Y05.VIS + Y002_3_2.UV + Y019_2_1.UV + Y023_5.UV + Y05.UV),
-                           levels = glm_design)
-
-# conduct gene wise statistical tests
-anov.group <- glmTreat(glm_fit, contrast=con.group)
-
-# view summary of DE genes
-summary(decideTests(anov.group))
-
-# create MD plot of DE genes
-plotMD(anov.group)
-
-# add blue lines to indicate 2-fold changes
-abline(h=c(-1, 1), col="blue")
-
-# generate table of DE genes
-tagsTbl_group <- topTags(anov.group, n=nrow(anov.group$table), adjust.method="fdr")$table
-
-# add column for identifying direction of DE gene expression
-tagsTbl_group$topDE <- "NA"
-
-# identify significantly up DE genes
-tagsTbl_group$topDE[tagsTbl_group$logFC > 1 & tagsTbl_group$FDR < 0.05] <- "UP"
-
-# identify significantly down DE genes
-tagsTbl_group$topDE[tagsTbl_group$logFC < -1 & tagsTbl_group$FDR < 0.05] <- "DOWN"
-
-# create volcano plot
-ggplot(data=tagsTbl_group, aes(x=logFC, y=-log10(FDR), color = topDE)) + 
-  geom_point() +
-  theme_minimal() +
-  scale_colour_discrete(type = ghibli_subset, breaks = c("Up", "Down"))
-
-# identify significantly DE genes by FDR
-tagsTbl_group.glm_keep <- tagsTbl_group$FDR < 0.05
-
-# create filtered results table of DE genes
-tagsTbl_group_filtered <- tagsTbl_group[tagsTbl_group.glm_keep,]
-
-
-##
-# GLM Results Exploration
-##
-
-# retrieve set of DE gene names for group contrast
-geneSet_group <- rownames(tagsTbl_group_filtered)
-
-# retrieve set of DE gene names for interaction contrast
-geneSet_condition <- rownames(tagsTbl_condition_filtered)
-
-# create combined glm_list of DE gene names
-glm_list_venn <- list(group = geneSet_group, 
-                          interaction = geneSet_condition)
-
-# create venn diagram
-ggVennDiagram(glm_list_venn, label_alpha=0.25, category.names = c("group","condition")) +
-  scale_color_brewer(palette = "Paired")
+# identify significantly DE genes
+DGESubset_condition <- tagsTbl_condition_filtered#[tagsTbl_condition_filtered$logFC > 1 | tagsTbl_condition_filtered$logFC < -1,]
+# subset the log2 CPM by the DGE set
+DGESubset_condition.keep <- rownames(norm_glm_list) %in% rownames(DGESubset_condition)
+logcpmSubset_condition <- norm_glm_list[DGESubset_condition.keep, ]
+# combine all columns into one period separated
+#exp_factor <- data.frame(Sample = unlist(glm_targets, use.names = FALSE))
+#rownames(exp_factor) <- colnames(logcpmSubset_condition)
+# TO-DO: use color blind safe pallette for sample dendrogram
+#Create heatmap for DGE
+pheatmap_condition <- as.ggplot(
+  pheatmap(logcpmSubset_condition, scale="row", #annotation_col = exp_factor, 
+           main="Heatmap of GLM DE Genes", show_rownames = FALSE,
+           color = colorRampPalette(c(plotColors[5], "white", plotColors[6]))(100))
+)
+# save the plot to a png file
+ggsave("UV_VIS_pheatmap.png", plot = pheatmap_condition, bg = "white", device = "png", width = 9, height = 8, units = "in")

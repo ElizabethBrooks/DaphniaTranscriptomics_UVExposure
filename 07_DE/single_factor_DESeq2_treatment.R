@@ -6,9 +6,10 @@
 
 # set the working directory
 #setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx/DESeq2/treatment")
-setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx_test/DESeq2/treatment")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx_test/DESeq2/treatment")
 #setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_test/DESeq2/treatment")
-
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment")
+setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_noPA")
 
 ##
 # Packages
@@ -42,8 +43,10 @@ library(DESeq2)
 
 # import gene count data
 #gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx/counts_merged.csv", row.names="gene"))
-gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx_test/counts_merged.csv", row.names="gene"))
+#gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_EGAPx_test/counts_merged.csv", row.names="gene"))
 #gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/short_read_data_processed_test/counts_merged.csv", row.names="gene"))
+#gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/gene_counts.csv", row.names="gene"))
+gene_counts <- as.matrix(read.csv("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype_noPA/gene_counts.csv", row.names="gene"))
 
 # trim the data table to remove lines with counting statistics (htseq)
 removeList <- c("__no_feature", "__ambiguous", "__too_low_aQual", "__not_aligned", "__alignment_not_unique")
@@ -53,22 +56,27 @@ gene_counts <- gene_counts[!row.names(gene_counts) %in% removeList,]
 nrow(gene_counts)
 
 # import grouping factors
-colData <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/data/DESeq2/study_design_treatment.csv", row.names="sample")
+#targets <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/data/DESeq2/study_design_treatment.csv", row.names="sample")
+#targets <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/sample_data.csv", row.names="sample")
+targets <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype_noPA/sample_data.csv", row.names="sample")
 
 # verify that the order of the samples in the counts and groupings files match
 #colnames(gene_counts)
-#rownames(colData)
+#rownames(targets)
+
+# remove data
+targets <- dplyr::select(targets, -contains("genotype"))
 
 # convert the grouping data into factors 
-colData$treatment <- factor(colData$treatment)
+targets$treatment <- factor(targets$treatment)
 
 # verify that the data is now of the factor type
-#is.factor(colData$treatment)
+#is.factor(targets$treatment)
 
 # create DESeqDataSet list object
 # the design formula expresses the variables which will be used in modeling
 dds <- DESeqDataSetFromMatrix(countData = gene_counts,
-                              colData = colData,
+                              colData = targets,
                               design = ~ treatment)
 
 # inspect the list object
@@ -76,10 +84,17 @@ dds <- DESeqDataSetFromMatrix(countData = gene_counts,
 
 # by default, the reference level for factors is based on alphabetical order
 # specify the reference level
-dds$treatment <- relevel(dds$treatment, ref = "Control")
+#dds$treatment <- relevel(dds$treatment, ref = "Control")
+dds$treatment <- relevel(dds$treatment, ref = "VIS")
 
 # verify the re-leveling
 #dds$treatment
+
+# output the input data
+gene_counts <- cbind(gene = row.names(gene_counts), gene_counts)
+write.csv(as.data.frame(gene_counts), file="gene_counts.csv", quote = FALSE, row.names = FALSE)
+targets <- cbind(sample = row.names(targets), targets)
+write.csv(as.data.frame(targets), file="sample_data.csv", quote = FALSE, row.names = FALSE)
 
 
 ##
@@ -209,7 +224,8 @@ res <- results(dds)
 
 # note that the order of the variables of the design do not matter 
 # so long as the we directly specify the comparison
-res <- results(dds, contrast=c("treatment","UV","Control"))
+#res <- results(dds, contrast=c("treatment","UV","Control"))
+res <- results(dds, contrast=c("treatment","UV","VIS"))
 
 # check out the results
 #res
@@ -248,7 +264,8 @@ write.csv(as.data.frame(res05), file="UV_Control_results_0.5.csv")
 select <- order(rowMeans(counts(dds,normalized=TRUE)), decreasing=FALSE)[1:20]
 
 # setup list of colors associated with treatments
-anno_colors = list(treatment = c(Control = ponyo_colors[4], UV = ponyo_colors[3]))
+#anno_colors = list(treatment = c(Control = ponyo_colors[4], UV = ponyo_colors[3]))
+anno_colors = list(treatment = c(VIS = ponyo_colors[4], UV = ponyo_colors[3]))
 
 # explore the count matrix using a heatmap of the vst data
 pheatmap(assay(vsd)[select,], 
@@ -282,7 +299,8 @@ dev.off()
 
 # shrink the log2 fold changes to remove the noise associated with log2 fold 
 # changes from low count genes without requiring arbitrary filtering thresholds
-resLFC <- lfcShrink(dds, coef="treatment_UV_vs_Control", type="apeglm")
+#resLFC <- lfcShrink(dds, coef="treatment_UV_vs_Control", type="apeglm")
+resLFC <- lfcShrink(dds, coef="treatment_UV_vs_VIS", type="apeglm")
 
 # inspect the shrunken log2 fold changes
 resLFC
