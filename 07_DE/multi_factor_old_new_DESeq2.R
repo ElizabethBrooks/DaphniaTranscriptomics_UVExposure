@@ -4,12 +4,29 @@
 # Working Directory
 ##
 
-# set the working directory
+# set the working directory for treatment analysis
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment/PA")
+
+# set the working directory for treatment_genotype analysis
 #setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype_noPA")
-#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype")
+setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype_TG_noPA")
 #setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/FDR0.1_LFC0.1")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype")
 #setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/Olympic")
-setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/Sierra")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_genotype/Sierra")
+
+# set the working directory for treatment_group_batch analysis
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_group_batch")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_group_batch_TG")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_group_batch_TG_noPA")
+
+# set the working directory for treatment_group analysis
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_group")
+
+# set the working directory for treatment_batch analysis
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_batch")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_batch/Olympic")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DESeq2/treatment_batch/Sierra")
 
 ##
 # Packages
@@ -42,8 +59,9 @@ library(dplyr)
 # TO-DO: double check
 # color blind safe plotting palettes
 defaultColors <- palette.colors(palette = "Okabe-Ito")
-blindColors <- c("#000000", "#999999", "#E69F00", "#56B4E9", "#009E73", 
-                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+blindColors <- c("#E69F00", "#56B4E9", "#009E73", 
+                 "#F0E442", "#0072B2", "#D55E00", 
+                 "#CC79A7", "#000000", "#999999")
 safeColors <- carto_pal(12, "Safe")
 plotColors <- c(safeColors, blindColors, defaultColors)
 
@@ -83,26 +101,33 @@ design <- read.csv(file="/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_n
 targets <- as.data.frame(lapply(design, as.factor))
 rownames(targets) <- rownames(design)
 
-# remove data
-`%ni%` <- Negate(`%in%`)
-remove_list <- row.names(targets[grepl("Olympic", targets$group),])
-gene_counts <- subset(gene_counts,select = names(gene_counts) %ni% remove_list)
-targets <- targets[!grepl("Olympic", targets$group),]
+# remove specific count data
+#`%ni%` <- Negate(`%in%`)
+#remove_list <- row.names(targets[grepl("Olympic", targets$group),])
+#gene_counts <- subset(gene_counts,select = names(gene_counts) %ni% remove_list)
+#targets <- targets[!grepl("Olympic", targets$group),]
 #remove_list <- row.names(targets[grepl("Sierra", targets$group),])
 #gene_counts <- subset(gene_counts,select = names(gene_counts) %ni% remove_list)
 #targets <- targets[!grepl("Sierra", targets$group),]
 gene_counts <- dplyr::select(gene_counts, -contains("PA"))
 targets <- targets[!grepl("PA", targets$group),]
+
+# remove unnecessary factors
 targets <- dplyr::select(targets, -contains("group"))
 targets <- dplyr::select(targets, -contains("batch"))
-targets <- dplyr::select(targets, -contains("tolerance"))
+#targets <- dplyr::select(targets, -contains("tolerance"))
+#targets <- dplyr::select(targets, -contains("genotype"))
 
 # create DESeqDataSet list object
 dds <- DESeqDataSetFromMatrix(countData = gene_counts,
                               colData = targets,
-                              design = ~ treatment + genotype)
-                              #design = ~ 0 + treatment + genotype)
-                              #design = ~ group + treatment + genotype + batch + tolerance)
+                              #design = ~ treatment + genotype)
+                              design = ~ treatment + genotype + treatment:genotype)
+                              #design = ~ treatment + group + batch)
+                              #design = ~ treatment + group + batch + treatment:group)
+                              #design = ~ treatment + group)
+                              #design = ~ treatment + batch)
+                              #design = ~ treatment)
 
 # inspect the list object
 #dds
@@ -112,8 +137,11 @@ dds <- DESeqDataSetFromMatrix(countData = gene_counts,
 #design(dds) <- ~ group
 
 # specify the reference level
-#dds$treatment <- relevel(dds$treatment, ref = "VIS")
+dds$treatment <- relevel(dds$treatment, ref = "VIS")
 #dds$genotype <- relevel(dds$genotype, ref = "PA")
+#dds$group <- relevel(dds$group, ref = "PA")
+dds$genotype <- relevel(dds$genotype, ref = "Sierra")
+#dds$group <- relevel(dds$group, ref = "Sierra")
 
 # verify the re-leveling
 #dds$treatment
@@ -124,6 +152,9 @@ gene_counts <- cbind(gene = row.names(gene_counts), gene_counts)
 write.csv(as.data.frame(gene_counts), file="gene_counts.csv", quote = FALSE, row.names = FALSE)
 targets <- cbind(sample = row.names(targets), targets)
 write.csv(as.data.frame(targets), file="sample_data.csv", quote = FALSE, row.names = FALSE)
+
+# clean up the targets
+targets <- dplyr::select(targets, -contains("sample"))
 
 
 ##
@@ -151,19 +182,49 @@ nrow(dds)
 vsd <- vst(dds, blind=FALSE)
 
 # save the PCA
-targets <- dplyr::select(targets, -contains("sample"))
 pcaData <- plotPCA(vsd, intgroup=colnames(targets), returnData=FALSE)
-                      
-# store the PCA plot
-sample_pca <- ggplot(pcaData@data, aes(PC1, PC2, color=pcaData@data[,5], shape=pcaData@data[,6])) +
+# store the PCA plot of PC1 and PC2
+sample_pca <- ggplot(pcaData@data, aes(PC1, PC2, color=pcaData@data[,6], shape=pcaData@data[,5])) +
   geom_point(size=3) + 
-  scale_colour_manual(name = colnames(pcaData@data)[5], values = c(plotColors[seq(1, length(levels(pcaData@data[,5])))])) +
-  scale_shape_manual(name = colnames(pcaData@data)[6], values = seq(0, length(levels(pcaData@data[,6]))-1)) +
+  scale_colour_manual(name = colnames(pcaData@data)[6], values = c(plotColors[seq(1, length(levels(pcaData@data[,6])))])) +
+  scale_shape_manual(name = colnames(pcaData@data)[5], values = seq(0, length(levels(pcaData@data[,5]))-1)) +
   xlab(pcaData@labels$x) +
   ylab(pcaData@labels$y) + 
-  coord_fixed()
+  coord_fixed() +
+  #stat_ellipse(aes(group = batch)) +
+  theme_bw()
 # save the PCA plot
 ggsave("sample_pca.png", plot = sample_pca, device = "png", width = 9, height = 8, units = "in")
+
+# save the PCA with PC1 and PC3
+pcaData_pc1_pc3 <- plotPCA(vsd, intgroup=colnames(targets), returnData=FALSE, pcsToUse = c(1,3))
+# store the PCA plot of PC1 and PC3
+sample_pc1_pc3 <- ggplot(pcaData_pc1_pc3@data, aes(PC1, PC3, color=pcaData_pc1_pc3@data[,6], shape=pcaData_pc1_pc3@data[,5])) +
+  geom_point(size=3) + 
+  scale_colour_manual(name = colnames(pcaData_pc1_pc3@data)[6], values = c(plotColors[seq(1, length(levels(pcaData_pc1_pc3@data[,6])))])) +
+  scale_shape_manual(name = colnames(pcaData_pc1_pc3@data)[5], values = seq(0, length(levels(pcaData_pc1_pc3@data[,5]))-1)) +
+  xlab(pcaData_pc1_pc3@labels$x) +
+  ylab(pcaData_pc1_pc3@labels$y) + 
+  coord_fixed() +
+  #stat_ellipse(aes(group = batch)) +
+  theme_bw()
+# save the PCA plot
+ggsave("sample_pc1_pc3.png", plot = sample_pc1_pc3, device = "png", width = 9, height = 8, units = "in")
+
+# save the PCA with PC2 and PC3
+pcaData_pc2_pc3 <- plotPCA(vsd, intgroup=colnames(targets), returnData=FALSE, pcsToUse = c(2,3))
+# store the PCA plot of PC2 and PC3
+sample_pc2_pc3 <- ggplot(pcaData_pc2_pc3@data, aes(PC2, PC3, color=pcaData_pc2_pc3@data[,6], shape=pcaData_pc2_pc3@data[,5])) +
+  geom_point(size=3) + 
+  scale_colour_manual(name = colnames(pcaData_pc2_pc3@data)[6], values = c(plotColors[seq(1, length(levels(pcaData_pc2_pc3@data[,6])))])) +
+  scale_shape_manual(name = colnames(pcaData_pc2_pc3@data)[5], values = seq(0, length(levels(pcaData_pc2_pc3@data[,5]))-1)) +
+  xlab(pcaData_pc2_pc3@labels$x) +
+  ylab(pcaData_pc2_pc3@labels$y) + 
+  coord_fixed() +
+  #stat_ellipse(aes(group = batch)) +
+  theme_bw()
+# save the PCA plot
+ggsave("sample_pc2_pc3.png", plot = sample_pc2_pc3, device = "png", width = 9, height = 8, units = "in")
 
 # transpose of the transformed count matrix to get sample-to-sample distances
 sampleDists <- dist(t(assay(vsd)))
@@ -193,11 +254,11 @@ ggsave("sample_clustering.png", plot = sample_clust, bg = "white", device = "png
 # standard differential expression analysis steps are wrapped into a single function
 dds <- DESeq(dds)
 
+# LRT
+#dds <- DESeq(dds, test="LRT", reduced=~batch)
+
 # extract a results table with log2 fold changes, p values and adjusted p values
 #res <- results(dds)
-
-# view the group names
-#resultsNames(dds)
 
 # directly specify the comparison
 #res <- results(dds, contrast=c(colnames(targets)[2],levels(targets[,2])))
@@ -223,11 +284,33 @@ dds <- DESeq(dds)
 cutFDR=0.05
 cutLFC=0
 
-# set the adjusted p-value cut off to 0.05
+# view the group names
+resultsNames(dds)
+
+# set the adjusted p-value and LFC cut offs
+# if lfcThreshold is specified, the results are for Wald tests, and LRT p-values will be overwritten
 #res05 <- results(dds, contrast=c(colnames(targets)[2],levels(targets[,2])), alpha=cutFDR)
-# set the adjusted p-value cut off to 0.05 and LFC to 1.2
-# If lfcThreshold is specified, the results are for Wald tests, and LRT p-values will be overwritten.
-res05 <- results(dds, contrast=c(colnames(targets)[2],levels(targets[,2])), alpha=cutFDR, lfcThreshold=cutLFC)
+#res05 <- results(dds, contrast=c("treatment", "UV", "VIS"), alpha=cutFDR, lfcThreshold=cutLFC)
+
+# testing comparisons
+# https://rpubs.com/ge600/deseq2
+# the effect of treatment in Sierra (the main effect)
+res05 <- results(dds, contrast=c("treatment", "VIS", "UV"), alpha=cutFDR, lfcThreshold=cutLFC)
+# the effect of treatment in Olympic
+#res05 <- results(dds, contrast=list(c("treatment_UV_vs_VIS", "treatmentUV.groupOlympic")), alpha=cutFDR, lfcThreshold=cutLFC)
+# what is the difference between Sierra and Olympic without treatment?
+#res05 <- results(dds, contrast=c("group", "Sierra", "Olympic"), alpha=cutFDR, lfcThreshold=cutLFC)
+# with treatment, what is the difference between Sierra and Olympic?
+#res05 <- results(dds, contrast=list(c("group_Olympic_vs_Sierra", "treatmentUV.groupOlympic")), alpha=cutFDR, lfcThreshold=cutLFC)
+# the different response in groups (interaction term)
+#res05 <- results(dds, name="treatmentUV.groupOlympic")
+# what is the difference between Old and New without treatment?
+#res05 <- results(dds, contrast=c("batch", "Old", "New"), alpha=cutFDR, lfcThreshold=cutLFC)
+# with treatment, what is the difference between Old and New?
+#res05 <- results(dds, contrast=list(c("batch_Old_vs_New", "treatmentUV.groupOlympic")), alpha=cutFDR, lfcThreshold=cutLFC)
+
+# LRT results
+#res05 <- results(dds, alpha=cutFDR, lfcThreshold=cutLFC)
 
 # order our results table by the smallest p value
 res05Ordered <- res05[order(res05$pvalue),]
@@ -236,14 +319,16 @@ res05Ordered <- res05[order(res05$pvalue),]
 summary(res05Ordered)
 # number of up expressed
 #gsub(",", "", strsplit(capture.output(summary(res05Ordered))[4], " ")[[1]][9])
-gsub(",", "", strsplit(capture.output(summary(res05Ordered))[4], " ")[[1]][12])
+#gsub(",", "", strsplit(capture.output(summary(res05Ordered))[4], " ")[[1]][12])
 # number of down expressed
 #gsub(",", "", strsplit(capture.output(summary(res05Ordered))[5], " ")[[1]][6])
-gsub(",", "", strsplit(capture.output(summary(res05Ordered))[5], " ")[[1]][10])
+#gsub(",", "", strsplit(capture.output(summary(res05Ordered))[5], " ")[[1]][10])
 
-# save the filtered results to a csv file
+# format results
 res05_out <- as.data.frame(res05Ordered)
 res05_out <- cbind(gene = row.names(res05_out), res05_out)
+
+# save the filtered results to a csv file
 write.csv(res05_out, file="UV_VIS_results.csv", quote = FALSE, row.names = FALSE)
 
 
@@ -254,6 +339,7 @@ write.csv(res05_out, file="UV_VIS_results.csv", quote = FALSE, row.names = FALSE
 # identify significantly DE genes
 DGESubset <- na.omit(res05_out[res05_out$padj <= cutFDR,])
 DGESubset <- na.omit(DGESubset[DGESubset$log2FoldChange >= cutLFC | DGESubset$log2FoldChange <= (-1*cutLFC),])
+
 # extract vst counts
 vsdCounts <- assay(vsd)
 
@@ -262,14 +348,43 @@ DGESubset.keep <- rownames(vsdCounts) %in% rownames(DGESubset)
 vsdSubset <- vsdCounts[DGESubset.keep, ]
 
 # combine all columns into one period separated
-#exp_factor <- data.frame(Sample = unlist(targets, use.names = FALSE))
+#exp_factor <- data.frame(
+#                  Sample = unlist(paste(targets$genotype, 
+#                                        targets$treatment, 
+#                                        sep = "."), 
+#                  use.names = FALSE))
 #rownames(exp_factor) <- colnames(vsdSubset)
 
-# TO-DO: use color blind safe palette for sample dendrogram
+# setup annotation names
+ann_groups <- data.frame(
+                treatment = as.factor(targets$treatment),
+                genotype = as.factor(targets$genotype),
+                #group = as.factor(targets$group),
+                #batch = as.factor(targets$batch),
+                row.names = colnames(vsdSubset))
+
+# setup annotation colors
+ann_colors <- list(
+  genotype = plotColors[seq(1, length(unique(targets$genotype)))],
+  #batch = blindColors[seq(1, length(unique(targets$batch)))],
+  #group = safeColors[seq(1, length(unique(targets$group)))],
+  treatment = c("black", "white"))
+
+# setup annotation color names
+names(ann_colors[["treatment"]]) <- unique(targets$treatment)
+names(ann_colors[["genotype"]]) <- unique(targets$genotype)
+#names(ann_colors[["group"]]) <- unique(targets$group)
+#names(ann_colors[["batch"]]) <- unique(targets$batch)
+
+
 # create heatmap for DGE
 vst_dge <- as.ggplot(
-  pheatmap(vsdSubset, scale="row", #annotation_col = exp_factor, 
-           main="Heatmap of GLM DE Genes", show_rownames = FALSE,
+  pheatmap(vsdSubset, 
+           scale="row", 
+           annotation_col = ann_groups, 
+           annotation_colors = ann_colors,
+           main="Heatmap of DE Genes", 
+           show_rownames = FALSE,
            color = colorRampPalette(c(plotColors[5], "white", plotColors[6]))(100))
 )
 # save the plot to a png file
@@ -307,8 +422,9 @@ plotMA(res05, ylim=c(-2,2))
 dev.off()
 
 # shrink the log2 fold changes to remove the noise 
-resLFC <- lfcShrink(dds, coef="treatment_VIS_vs_UV", type="apeglm")
-#resLFC <- lfcShrink(dds, coef="treatment_UV_vs_VIS", type="apeglm")
+#resLFC <- lfcShrink(dds, coef="treatment_VIS_vs_UV", type="apeglm")
+resLFC <- lfcShrink(dds, coef="treatment_UV_vs_VIS", type="apeglm")
+
 # inspect the shrunken log2 fold changes
 #resLFC
 
