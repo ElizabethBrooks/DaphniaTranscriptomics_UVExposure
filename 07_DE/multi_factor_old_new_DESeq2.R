@@ -5,8 +5,8 @@
 ##
 
 # set the working directory for treatment_group_batch analysis
-#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DA/DESeq2_LFC0.1_FDR0.05/treatment_group_batch_TG_noE2")
-setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DA/DESeq2_LFC0.1_FDR0.05_normalized/treatment_group_batch_TG_noE2")
+setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DA/DESeq2_LFC0.1_FDR0.05/treatment_group_batch_TG_noE2")
+#setwd("/Users/bamflappy/PfrenderLab/melanica_UV_exposure/old_new_merged/DA/DESeq2_LFC0.1_FDR0.05_normalized/treatment_group_batch_TG_noE2")
 
 ##
 # Packages
@@ -126,7 +126,8 @@ dds$group <- relevel(dds$group, ref = "PA")
 
 # verify the re-leveling
 #dds$treatment
-#dds$genotype
+#dds$group
+#dds$batch
 
 # output the input data
 gene_counts <- cbind(gene = row.names(gene_counts), gene_counts)
